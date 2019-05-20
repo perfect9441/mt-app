@@ -1,6 +1,6 @@
 # mt-app
 
-> My legendary Nuxt.js project
+> 美团网vue实战 vu学习
 
 ## Build Setup
 
