@@ -42,41 +42,44 @@
             type:'takeout',
             name:'外卖',
             child:[{
-              title:'美食',
-              child:['代金券','饮品','烤肉','火锅','地方美食']
+              title:'外卖',
+              child:['美食外卖','超市配送','外卖跑腿','更多精彩','敬请期待']
             }]
           },
           {
             type:'hotel',
             name:'酒店',
             child:[{
-              title:'美食',
-              child:['代金券','饮品','烤肉','火锅','地方美食']
+              title:'酒店星级',
+              child:['经济型/快捷', '三星级','四星级','五星级','超豪华']
             }]
           }
           ]
         }
       },
       computed:{
-        curdetial:function () {
+        curdetial () {
           return this.menu.filter((item) => item.type===this.kind)[0]
         }
       },
       methods:{
-        mouseleave:function () {
+        mouseleave () {
           let self = this;
           self._timer=setTimeout(function () {
             self.kind=''
           },150)
         },
-        mouseenter:function (e) {
+        mouseenter (e) {
           this.kind=e.target.querySelector('i').className
         },
-        sover:function () {
+        sover () {
           clearTimeout(this._timer)
         },
-        sout:function () {
-          this.kind=''
+        sout () {
+          let self = this;
+          self._timer=setTimeout(function () {
+            self.kind=''
+          },150)
         }
       }
     }
