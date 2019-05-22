@@ -1,8 +1,8 @@
 import passport from 'koa-passport'
 import LocalStrategy from 'passport-local'
-import UserModel from '../../dbs/models/users'
+import UserModel from '../../dbs/models/user'
 
-passport.use(new LocalStrategy(function(username,password,done){
+passport.use(new LocalStrategy(async function(username,password,done){
   let where = {
     username
   };
@@ -17,3 +17,13 @@ passport.use(new LocalStrategy(function(username,password,done){
     return done(null,false,'用户不存在')
   }
 }))
+// 序列化
+passport.serializeUser(function(user,done){
+  done(null,user)
+})
+// 反序列化
+passport.deserializeUser(function(user,done){
+  return done(null,user)
+})
+
+export default passport
