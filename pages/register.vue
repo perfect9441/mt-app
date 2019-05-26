@@ -77,6 +77,7 @@
 </template>
 
 <script>
+  import CryptoJS from 'crypto-js'
   export default {
     data() {
       return{
@@ -105,7 +106,7 @@
             validator:(role, value, callback)=>{
               if(value === ''){
                 callback(new Error('请输入再次输入密码'))
-              }else if(value !== this.roleForm.pwd){
+              }else if(value !== this.ruleForm.pwd){
                 callback(new Error('两次密码不一致'))
               }else{
                 callback()
@@ -118,6 +119,10 @@
     },
     layout: 'blank',
     methods:{
+      /*
+      请求结果处理的一种方式.then处理
+      另一种方式在components/public/header/user.vue中实现
+       */
       sendMsg(){
         const self = this
         let namePass
@@ -156,7 +161,30 @@
         }
       },
       register(){
-
+        let self = this
+        this.$refs['ruleForm'].validate((valid)=>{
+          if(valid){
+            self.$axios.post('/users/singup',{
+              username:window.encodeURIComponent(self.ruleForm.name),
+              password:CryptoJS.MD5(self.ruleForm.pwd).toString(),
+              email:self.ruleForm.email,
+              code:self.ruleForm.code
+            }).then(({status,data})=>{
+              if(status===200){
+                if(data && data.code === 0){
+                  location.href='/login'
+                }else{
+                  self.error = data.msg
+                }
+              }else{
+                self.error=`服务器出错，错误码:${status}`
+              }
+              setTimeout(function(){
+                self.error=''
+              },1500)
+            })
+          }
+        })
       }
     }
   }

@@ -21,6 +21,16 @@
         return{
           user:''
         }
+      },
+      /*
+      请求结果处理的一种方式async await处理
+      另一种方式在pages/register.vue中实现
+       */
+      async mounted(){
+       const{status,data:{user}} = await this.$axios.get('/users/getUser')
+        if(status==200){
+         this.user = user
+        }
       }
     }
 </script>

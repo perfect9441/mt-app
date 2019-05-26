@@ -6,8 +6,12 @@ import Passport from './utils/passport'
 import Email from '../dbs/config'
 import axios from './utils/axios'
 // 定义前缀
+/*
+单词写法！！！！！！
+写错一个单词卡了三天！！！！！！
+ */
 let router = new Router({
-  perfix:'/users'
+  prefix:'/users'
 })
  let Store = new Redis().client
 // 注册接口
@@ -20,7 +24,7 @@ router.post('/singup',async(ctx)=>{
   } = ctx.request.body
   // 获取保存的验证码、有效期
   if(code){
-    const saveCode = await Store.hget(`nodemail:${userrname}`,'code')
+    const saveCode = await Store.hget(`nodemail:${username}`,'code')
     const saveExpire = await Store.hget(`nodemail:${username}`,'code')
     if(code === saveCode){
       if(new Date().getTime()-saveExpire>0){
@@ -52,7 +56,7 @@ router.post('/singup',async(ctx)=>{
     }
     return
   }
-  let nuser = await user.create({
+  let nuser = await User.create({
     username,
     password,
     email
@@ -62,7 +66,7 @@ router.post('/singup',async(ctx)=>{
       username,
       password
     })
-    if(red.data&&res.data.code===0){
+    if(res.data&&res.data.code===0){
       ctx.body={
         code:0,
         msg:'注册成功！',
@@ -107,10 +111,11 @@ router.post('/singin',async(ctx,next)=>{
   })(ctx,next)
 })
 // 验证码接收
-router.post('/verify',async(ctx,next)=>{
+router.post('/verify', async (ctx,next)=>{
+  console.info(ctx)
   let username = ctx.request.body.username
   const saveExpire = await Store.hget(`nodemail:${username}`,'expire')
-  if(saveExpire&&new Date().getTime()-saveExpire<0){
+  if(saveExpire && new Date().getTime()-saveExpire<0){
     ctx.body={
       code:-1,
       msg:'验证请求过频繁，请一分钟内请求一次'
@@ -142,7 +147,12 @@ router.post('/verify',async(ctx,next)=>{
     if(error){
       return console.log('error')
     }else{
-      Store.hmset(`nodemail${ko.user}`,'code',ko.code,'expire',ko.expire,'email',ko.email)
+      Store.hmset(
+        `nodemail${ko.user}`,
+        'code',ko.code,
+        'expire',ko.expire,
+        'email',ko.email
+      )
     }
   })
   ctx.body={
