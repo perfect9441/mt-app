@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import geo from './modules/geo'
+import home from './modules/home'
 
 Vue.use(Vuex)
 
 const store = () => new Vuex.Store({
   modules:{
-    geo
+    geo,
+    home
   },
   actions:{
     async nuxtServerInit({commit},{req,app}){
@@ -17,8 +19,15 @@ const store = () => new Vuex.Store({
           city
         }
       }=await app.$axios.get('/geo/getPosition')
-      console.info(status)
       commit('geo/setPosition',status===200?{city,province}:{city:'',province:''})
+      const {
+        status:status2,
+        data:{
+          menu
+        }
+      }=await app.$axios.get('/geo/menu')
+      console.info(menu)
+      commit('home/setMenu',status2===200?menu:[])
     }
   }
 })
