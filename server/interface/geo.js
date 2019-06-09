@@ -1,33 +1,49 @@
 import Router from  'koa-router'
-import axios from './utils/axios'
+
+import Province from '../dbs/models/province'
+import Menu from '../dbs/models/menu'
+import City from '../dbs/models/city'
+import Position from '../dbs/models/position'
 
 let router = new Router({
   prefix:'/geo'
 })
 
-const sign = 'a3c9fe0782107295ee9f1709edd15218'
+// const sign = 'a3c9fe0782107295ee9f1709edd15218'
 /*
-获取不到真实数据，用假数据代替
+获取不到线上数据，用本地数据代替
  */
-router.get('/getPosition',async(ctx)=>{
-  let data = {
-    province:'甘肃',
-    city:'嘉峪关'
+
+// 原因待查，获取不到position的result
+router.get('/getPosition', async ctx =>{
+  const result = await Position.findOne() // Operating a local database
+  console.info(result)
+  ctx.body = {
+    province:"甘肃",
+    city:"嘉峪关"
+    // province: result.province,
+    // city: result.city
   }
-  ctx.body = data
-  ctx.statusCode = 200
-  /*
-  真实数据获取方法  没有有效的sign
-   */
-  // let {status,data:{province,city}} = await axios.get(`http://cp-tools.cn/geo/getPosition?sign=${sign}`)
-  // if(status === 200){
-  //   ctx.body={
-  //     province,
-  //     city
-  //   }
-  // }else{
-  //   province:''
-  //   city:''
-  // }
 })
+
+router.get('/menu', async ctx => {
+  const result = await Menu.findOne()
+  ctx.body = {
+    menu: result.menu
+  }
+})
+
+router.get('/province',async (ctx) => {
+  const result = await Province.find()
+  console.info(result)
+  ctx.body = {
+      province : result.map(item => {
+        return {
+          id:item.id,
+          name:item.value[0]
+        }
+      })
+  }
+})
+
 export default router
