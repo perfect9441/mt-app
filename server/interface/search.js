@@ -26,7 +26,6 @@ router.get('/top',async (ctx) => {
       top: []
     }
   }
-
 })
 
 export default router
