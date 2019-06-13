@@ -17,29 +17,28 @@
             placeholder="搜索商家或地点"
             @focus="focus"
             @blur="blur"
-            @input="inpute"/>
+            @input="input"/>
           <button class="el-button el-button-primary"><i class="el-icon-search"/></button>
           <dl
             v-if="isHotPlace"
             class="hotPlace">
             <dt>热门搜索</dt>
             <dd
-              v-for="(item,idx) in hotPlace"
-              :key="idx">{{ item }}</dd>
+              v-for="(item,idx) in $store.state.home.hotPlace.slice(0,3)"
+              :key="idx">{{ item.name }}</dd>
           </dl>
           <dl
             v-if="isSeachList"
             class="searchList">
             <dd
-              v-for="(item,idx) in searchPlace"
-              :key="idx">{{ item }}</dd>
+              v-for="(item,idx) in searchList"
+              :key="idx">{{ item.name }}</dd>
           </dl>
         </div>
         <p class="sugggest">
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
-          <a href="#">故宫博物院</a>
+          <a
+            v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
+            :key="idx">{{ item.name }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
         </p>
         <ul class="nav">
           <li>
@@ -79,13 +78,14 @@
 </template>
 
 <script>
+  import _ from 'lodash'
     export default {
       data(){
         return{
           search:'',
           isFocus:false,
-          hotPlace:['烤肉','烤肉','烤肉','烤肉','烤肉','烤肉'],
-          searchPlace:['万里长城','万里长城','万里长城','万里长城','万里长城']
+          // hotPlace:[],
+          searchList:[]
         }
       },
       computed:{
@@ -106,9 +106,18 @@
             self.isFocus=false
           },200)
         },
-        inpute:function () {
-          console.log('input')
-        }
+        input:_.debounce(async function(){
+          let self = this;
+          let city = self.$store.state.geo.position.city.replace('市','')
+          self.searchList = []
+          let {data :{top}} =await this.$axios.get('/search/top', {
+            params: {
+              input:this.search,
+              city
+            }
+          })
+          this.searchList =top.slice(0,10)
+        },300)
       }
     }
 </script>

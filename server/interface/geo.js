@@ -15,16 +15,27 @@ let router = new Router({
  */
 
 // 原因待查，获取不到position的result
-router.get('/getPosition', async ctx =>{
+router.get('/getPosition', async (ctx) =>{
   const result = await Position.findOne() // Operating a local database
   console.info(result)
   ctx.body = {
     province:"甘肃",
-    city:"嘉峪关"
+    city:"三亚"
     // province: result.province,
     // city: result.city
   }
 })
+
+
+// router.get('/getPosition', async ctx => {
+//   const result = await Position.findOne() // Operating a local database
+//   console.info(result)
+//   ctx.body = {
+//     province: result.province,
+//     city: result.city
+//   }
+// })
+
 
 router.get('/menu', async ctx => {
   const result = await Menu.findOne()
@@ -35,7 +46,6 @@ router.get('/menu', async ctx => {
 
 router.get('/province',async (ctx) => {
   const result = await Province.find()
-  console.info(result)
   ctx.body = {
       province : result.map(item => {
         return {
