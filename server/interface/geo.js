@@ -56,4 +56,43 @@ router.get('/province',async (ctx) => {
   }
 })
 
+router.get('/province/:id',async ctx => {
+  const result = await City.findOne({
+    id:ctx.params.id
+  })
+  ctx.body = {
+    code:0,
+    city:result.value.map(item => {
+      return{
+        province:item.province,
+        id:item.id,
+        name:item.name
+      }
+    })
+  }
+})
+
+router.get('/city',async ctx => {
+  const result = await City.find()
+  ctx.body={
+    city:result.map(item => {
+      return{
+        value:item.value
+      }
+    })
+  }
+})
+
+router.get('/hotCity', async ctx => {
+  const result = await City.find() // bug! Did not return the full city name
+  ctx.body = {
+    city: result.map(item => {
+      const value = item.value
+      const valueArray = [...value]
+      return {
+        value: valueArray
+      }
+    })
+  }
+})
 export default router
