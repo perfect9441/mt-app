@@ -4,7 +4,8 @@
       <dt>热门城市:</dt>
       <dd
         v-for="item in list"
-        :key="item.id">
+        :key="item.id"
+        @click="handleSelect(item.name)">
         {{ item.name === '市辖区'?item.province:item.name }}
       </dd>
     </dl>
@@ -30,7 +31,7 @@ export default {
       for (const value of city) {
         wantArray = [...value.value]
         for (const value of wantArray) {
-          if (value.hot === true) {
+          if (value.province === "北京市") {
             this.list.push(value)
           }
         }
@@ -41,6 +42,6 @@ export default {
 }
 </script>
 
-<style scoped>
-  @import "@/assets/css/changecity/hot.scss"
+<style lang="scss">
+  @import "@/assets/css/changecity/hot.scss";
 </style>

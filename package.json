@@ -20,6 +20,7 @@
     "element-ui": "^2.4.6",
     "express": "^4.17.0",
     "express-serve-static-core": "^0.1.1",
+    "js-pinyin": "^0.1.9",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
     "koa-generic-session": "^2.0.1",

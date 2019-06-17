@@ -103,7 +103,7 @@
               cb([])
             }
           }
-        },500),
+        },100),
         handleSelect(e){
           this.$store.commit('geo/setCity', e.value)
         }
